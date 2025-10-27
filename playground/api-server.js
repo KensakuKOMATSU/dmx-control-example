@@ -123,4 +123,9 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
   console.log('DMX API server is running on http://localhost:%d', port);
+  console.log('============================================');
+  console.log('  GET  /api/beta/dmx/values');
+  console.log('  POST /api/beta/dmx/set/:ch/:value');
+  console.log('  POST /api/beta/dmx/reset');
+  console.log('============================================');
 });

@@ -13,8 +13,10 @@
   "license": "MIT",
   "description": "example repository to control dmx with node.js",
   "dependencies": {
+    "@serialport/parser-delimiter": "^12.0.0",
     "dmx": "^0.2.5",
     "dmxnet": "^0.9.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "serialport": "^12.0.0"
   }
 }

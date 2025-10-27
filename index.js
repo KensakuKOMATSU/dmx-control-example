@@ -1,17 +1,21 @@
-const DMX = require('dmx')
+import DMX from 'dmx'
 
 const dmx = new DMX()
 //const driver = 'enttec-open-usb-dmx' // to display raw dmx data, set 'null'
-const driver = 'artnet' // to display raw dmx data, set 'null'
+const driver = 'enttec-usb-dmx-pro'
+//const driver = 'artnet' // to display raw dmx data, set 'null'
+//
+// MacOS : To list USB serial devices ... `ls /dev/tty.*`
 //const deviceId = '/dev/tty.usbserial-A50285BI' // specify your usb-dmx device name
-const deviceId = '192.168.0.5' // specify your artnet device ip address
+const deviceId = '/dev/tty.usbserial-EN481283'
+//const deviceId = '192.168.0.5' // specify your artnet device ip address
 const universe = dmx.addUniverse( 'demo', driver, deviceId )
 
 let flag = true;
 
 const patternObj = {
   "default" : [
-    [ 
+    [
       // sa: 1,   red - rgb( 255, 0, 0 )
       {  1: 160,  2: 160,  3: 255,  4: 255, 5: 0 },
       // sa: 10, blue - rgb( 0, 0, 255 )
@@ -25,13 +29,13 @@ const patternObj = {
     ]
   ],
   "lm70" : [
-    [ 
+    [
       // sa: 1,   red - rgb( 255, 0, 0 )
-      {  1: 160,  2: 160,  3: 10,  4: 255, 5: 0, 6: 0 },
+      {  1: 0,  2: 200,  3: 255,  4: 255, 5: 0, 6: 0 },
     ],
     [
       // sa: 1,   green - rgb( 0, 255, 0 )
-      { 1: 32, 2: 96, 3: 10, 4: 0, 5: 255, 6: 0 },
+      { 1: 0, 2: 128, 3: 255, 4: 0, 5: 255, 6: 0 },
     ]
   ]
 }
