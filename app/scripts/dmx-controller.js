@@ -1,4 +1,5 @@
 import DMXWrapper from './libs/dmx-wrapper.js';
+import { config, colors } from './conf/default.js';
 
 const STATUS = {
     IDLE: 'idle',
@@ -9,17 +10,46 @@ const connectButton = document.getElementById('connectButton');
 const controlPanel = document.getElementById('control-panel');
 let status = STATUS.IDLE;
 
+function getDmxLabel( config, channel ) {
+    for( const device of config ) {
+        const relativeChannel = channel - device.start_address + 1;
+        if( relativeChannel >= 1 && relativeChannel <= Object.keys( device.map ).length ) {
+            //return `${device.name} - ${device.map[ relativeChannel ]} (CH ${channel})`;
+            return {
+                id: device.id,
+                deviceName: device.name,
+                channel: channel,
+                name: device.map[ relativeChannel ]
+            }
+        }
+    }
+    return null;
+}
+
 function log( str ) {
-    const statusElement = document.getElementById('status');
-    statusElement.textContent = str;
+    const statusElement = document.getElementById('log');
+    statusElement.textContent += str + "\n";
 }
 
 function createPanel() {
     for( let ch = 1; ch <= 32; ch++ ) {
-        const label = document.createElement('label');
-        label.textContent = `CH ${ch}`;
-        const valueDisplay = document.createElement('span');
-        valueDisplay.textContent = '0';
+        const obj = getDmxLabel( config, ch );
+        if( !obj ) continue;
+
+        const label = document.createElement('input');
+        label.type = 'text';
+        label.value = `[CH ${obj.channel}] ${obj.deviceName} - ${obj.name}`;
+        label.style.backgroundColor = colors[ obj.id % colors.length ];
+        label.style.padding = '2px 5px';
+        label.style.fontWeight = 'bold';
+        label.style.color = 'white';
+
+        const valueDisplay = document.createElement('input');
+        valueDisplay.type = 'number';
+        valueDisplay.readOnly = true;
+        valueDisplay.style.width = '3em';
+        valueDisplay.value = '0';
+
         const input = document.createElement('input');
         input.type = 'range';
         input.min = 0;
@@ -30,7 +60,7 @@ function createPanel() {
         input.addEventListener('input', async () => {
             const dmxData = {};
             dmxData[ch] = parseInt(input.value);
-            valueDisplay.textContent = input.value;
+            valueDisplay.value = parseInt(input.value);
             dmx.update( dmxData );
             try {
                 await dmx.send();
