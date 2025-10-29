@@ -58,10 +58,25 @@
             <h2>Control Panel</h2>
             <div class="control-group">
                 <button id="connectButton">connect</button>
+                <button id="memoryButton" disabled>memory</button>
+                <button id="clearButton" disabled>clear</button>
             </div>
             <div id="control-panel">
             </div>
+            <div id="memory-panel" style="display:none;"></div>
             <p id="status"></p>
+        </section>
+        <section id="sequence-section" style="display: none;">
+            <h3>Sequence</h3>
+            <div id="sequence-panel">
+                <textarea 
+                    id="sequence-textarea" rows="10" cols="50" 
+                    placeholder="Enter sequence data here ('duration,label' per line)"
+                ></textarea>
+                <br>
+                <button id="play-sequence-button">Play Sequence</button>
+                <button id="pause-sequence-button" disabled>Pause Sequence</button>
+            </div>
         </section>
         <section>
             <pre id="log"></pre>
