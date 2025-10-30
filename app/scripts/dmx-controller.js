@@ -137,12 +137,21 @@ connectButton.addEventListener('click', async () => {
     }
 });
 
-function renderMemories() {
+/**
+ * label が一致する場合、ボタンの背景をハイライト表示
+ * 
+ * @param {string} label 
+ */
+function renderMemories( label ) {
     const memoryPanel = document.getElementById('memory-panel');
     memoryPanel.innerHTML = '<h3>Memories</h3>';
     memories.forEach( memory => {
         const button = document.createElement('button');
         button.textContent = memory.label;
+        button.style.marginLeft = '5px';
+        if( label && memory.label === label ) {
+            button.style.backgroundColor = 'yellow';
+        }
         button.addEventListener('click', async () => {
             if( status !== STATUS.CONNECTED ) return;
             dmx.update( memory.data );
@@ -158,6 +167,7 @@ function renderMemories() {
                         if( valueDisplay ) valueDisplay.value = memory.data[ch];
                     }
                 }
+                renderMemories( memory.label );
             } catch (error) {
                 log(`send error: ${error.message}`);
             }
@@ -167,18 +177,20 @@ function renderMemories() {
         // button の横に削除ボタンを追加
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
-        deleteButton.style.marginLeft = '5px';
+        deleteButton.style.marginLeft = '0px';
+        deleteButton.style.color = 'white';
+        deleteButton.style.backgroundColor = 'red';
         deleteButton.addEventListener('click', () => {
             const index = memories.findIndex( m => m.id === memory.id );
             if( index !== -1 ) {
                 memories.splice(index, 1);
+                // ローカルストレージに保存
+                localStorage.setItem(KEY_MEMORIES, JSON.stringify(memories));
                 renderMemories();
                 log(`Memory "${memory.label}" deleted.`);
             }
         });
         memoryPanel.appendChild(deleteButton);
-
-        memoryPanel.appendChild(document.createElement('br'));
     });
 }
 
@@ -222,6 +234,7 @@ clearButton.addEventListener('click', async () => {
                 if( valueDisplay ) valueDisplay.value = 0;
             }
         }
+        renderMemories();
     } catch (error) {
         log(`send error: ${error.message}`);
     }
@@ -235,6 +248,8 @@ sequenceTextarea.addEventListener('input', () => {
 
 let sequenceTimeout = null;
 playSequenceButton.addEventListener('click', () => {
+    if( status !== STATUS.CONNECTED ) return;
+    log('Sequence playback started.');
     // textarea の内容を解析してシーケンス再生の実装はここに追加
     playSequenceButton.disabled = true;
     pauseSequenceButton.disabled = false;
@@ -268,9 +283,18 @@ playSequenceButton.addEventListener('click', () => {
                             if( valueDisplay ) valueDisplay.value = memory.data[ch];
                         }
                     }
+                    renderMemories( label );
+
                 }).catch(error => {
                     log(`send error: ${error.message}`);
                 });
+            } else {
+                renderMemories();
+            }
+            const buttons = document.querySelectorAll('#memory-panel button');
+            for (const btn of buttons) {
+                btn.disabled = true;
+                console.log( btn );
             }
             sequenceTimeout = setTimeout(() => {
                 currentStep++;
