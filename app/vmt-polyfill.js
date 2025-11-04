@@ -123,10 +123,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         if( typeof vmtData === 'object' && vmtData.startTime !== undefined && vmtData.endTime !== undefined && vmtData.data !== undefined ) {
           const cue = new DataCue(vmtData.startTime, vmtData.endTime, vmtData.data, vmtData.type);
           cue.onenter = () => {
-            console.log(`Cue entered: %o, type: %s`, cue.value, cue.type);
+            //console.log(`Cue entered: %o, type: %s`, cue.value, cue.type);
           };
           cue.onexit = () => {
-            console.log(`Cue exited: %o, type: %s`, cue.value, cue.type);
+            //console.log(`Cue exited: %o, type: %s`, cue.value, cue.type);
           };
           trackElem.track.addCue(cue);
         }

@@ -1,5 +1,5 @@
 import DMXWrapper from './libs/dmx-wrapper.js';
-import { config, colors } from './conf/default.js';
+import { dmxConfigs, colors } from './conf/default.js';
 
 const STATUS = {
     IDLE: 'idle',
@@ -25,16 +25,16 @@ const logs = [];
 // Array<{id: number, label: string, data: {[channel: number]: number}}>;
 const memories = [];
 
-function getDmxLabel( config, channel ) {
-    for( const device of config ) {
-        const relativeChannel = channel - device.start_address + 1;
-        if( relativeChannel >= 1 && relativeChannel <= Object.keys( device.map ).length ) {
+function getDmxLabel( dmxConfigs, channel ) {
+    for( const dmxConfig of dmxConfigs ) {
+        const relativeChannel = channel - dmxConfig.start_address + 1;
+        if( relativeChannel >= 1 && relativeChannel <= Object.keys( dmxConfig.map ).length ) {
             //return `${device.name} - ${device.map[ relativeChannel ]} (CH ${channel})`;
             return {
-                id: device.id,
-                deviceName: device.name,
+                id: dmxConfig.id,
+                deviceName: dmxConfig.name,
                 channel: channel,
-                name: device.map[ relativeChannel ]
+                name: dmxConfig.map[ relativeChannel ]
             }
         }
     }
@@ -55,7 +55,7 @@ function log( str ) {
 
 function createPanel() {
     for( let ch = 1; ch <= 32; ch++ ) {
-        const obj = getDmxLabel( config, ch );
+        const obj = getDmxLabel( dmxConfigs, ch );
         if( !obj ) continue;
 
         const label = document.createElement('input');

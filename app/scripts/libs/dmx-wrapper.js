@@ -63,6 +63,10 @@ export default class DMXWrapper {
         return this._status;
     }
 
+    get connected() {
+        return this._status === STATUS.CONNECTED;
+    }
+
     async connect() {
         try {
             this._device = await navigator.usb.requestDevice({ filters: this._filters });
@@ -83,6 +87,10 @@ export default class DMXWrapper {
                 this.send();
             }, 250); // 250msごとにDMXデータを送信
         } catch (err) {
+            if( this._timer ) {
+                clearInterval(this._timer);
+                this._timer = null;
+            }
             throw err;
         }
     }
@@ -133,6 +141,7 @@ export default class DMXWrapper {
         try {
             const dataToSend = concatUint8Arrays([HEADER, this._dmxArray, END_BYTE]);
             await this._device.transferOut(this._endpointNumber, dataToSend);
+            return this._dmxArray;
         } catch (err) {
             throw err;
         }
