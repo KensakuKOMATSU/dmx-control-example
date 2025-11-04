@@ -3,7 +3,7 @@ WEBVMT
 NOTE lighting sample
 
 MEDIA
-dmx-example0724.mp4
+url:dmx-example0724.mp4
 mime-type:video/mp4
 
 NOTE Lighting config ( right side )

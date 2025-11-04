@@ -3,12 +3,12 @@ WEBVMT
 NOTE lighting sample
 
 MEDIA
-dmx-example0724.mp4
+url:dmx-example0724.mp4
 mime-type:video/mp4
 
 NOTE Lighting config ( left side )
 
-LIGHTING
+NOTE LIGHTING
 pan:0 tilt:0 dimmer:0
 color: "rgb(0, 0, 0)"
 
